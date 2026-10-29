@@ -57,6 +57,8 @@ sudo bash deploy/install-zhecheng.sh /tmp/zhecheng-web.tar.gz
 
 续期 hook 位于 `/usr/local/libexec/zhecheng/renew-nginx.sh`，保存为本证书的独立 deploy hook，仅匹配本证书及域名时才检查配置并平滑加载 Nginx。不会放入全局 hook 目录。通过仅针对本域名的 `renew --dry-run --run-deploy-hooks` 验证续期及加载，并要求加载成功标记存在，避免仅凭 Certbot 的退出码误报 hook 成功。
 
+续期配置按 Certbot 的 ConfigObj 格式只读检查，支持文件开头的无节字段和嵌套的 webroot_map；严格核对 renewalparams 中的 webroot 与专属 hook。若有效证书及这些续期参数已经存在，重新运行脚本会直接复用，不再次调用签发命令。
+
 优先复用当前已启用且运行中的 `snap.certbot.renew.timer` 或 `certbot.timer`。没有这类定时器时，仅新增 `zhecheng-cert-renew.service/.timer`，每日两次（北京时间，附随机延迟）检查本域名证书，保留其他证书和调度配置。脚本不会强制续期。若续期演练失败，已通过验收的 HTTPS 保持可用，脚本明确报告未完成的续期环节。
 
 签发和演练遵循 [Certbot 官方文档](https://eff-certbot.readthedocs.io/en/stable/using.html#renewing-certificates)。

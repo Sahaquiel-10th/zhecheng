@@ -77,19 +77,18 @@ if re.findall(r'DNS:([^,\s]+)',san)!=[sys.argv[2]]:
     raise SystemExit('已有同名证书包含其他域名，停止。')
 PY
 fi
-/snap/bin/certbot certonly --non-interactive --webroot \
-    --webroot-path "$site/acme" --cert-name "$domain" -d "$domain" \
-    --keep-until-expiring --no-directory-hooks --deploy-hook "$hook"
+if [[ -f "$cert/cert.pem" && -f "$cert/fullchain.pem" && -f "$cert/privkey.pem" ]] \
+    && openssl x509 -in "$cert/cert.pem" -noout -checkend 86400 >/dev/null; then
+    python3 "$script_dir/check-renewal.py" "/etc/letsencrypt/renewal/$domain.conf" "$hook"
+    printf '复用已经签发的有效证书，本次不执行证书签发请求。\n'
+else
+    /snap/bin/certbot certonly --non-interactive --webroot \
+        --webroot-path "$site/acme" --cert-name "$domain" -d "$domain" \
+        --keep-until-expiring --no-directory-hooks --deploy-hook "$hook"
+fi
 openssl x509 -in "$cert/cert.pem" -noout -checkhost "$domain"
 openssl x509 -in "$cert/cert.pem" -noout -checkend 86400
-python3 - "/etc/letsencrypt/renewal/$domain.conf" "$hook" <<'PY'
-import configparser,sys
-c=configparser.ConfigParser(interpolation=None)
-c.read(sys.argv[1])
-p=c['renewalparams']
-if p.get('authenticator')!='webroot' or not any(sys.argv[2] in p.get(k,'') for k in ['deploy_hook','renew_hook']):
-    raise SystemExit('证书已签发，但持久化的 webroot / deploy hook 设置未通过检查；尚未切换 HTTPS。')
-PY
+python3 "$script_dir/check-renewal.py" "/etc/letsencrypt/renewal/$domain.conf" "$hook"
 
 rollback() {
     local status=$? reverted=1
