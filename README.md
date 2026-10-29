@@ -28,7 +28,13 @@
 
 站点配置写入 `/etc/nginx/sites-enabled/zz-zhecheng.aiarrival.cn.conf`，在现有站点之后加载，避免新配置因先被加载而改变隐式默认站点。加载前后除检查已知域名状态，还会比较 IPv4/IPv6 默认站点的完整响应；默认站点内容发生变化会撤回新站配置。
 
-HTTPS 证书尚未配置，DNS 与公网可达性尚未确认。不得将本地预览或配置草稿视为已部署。
+HTTP、HTTPS 和自动续期调度已在首次安装后开通；完整续期演练曾遇测试 CA 限流，需另行验收。本地预览或 Git 推送不代表新版已经上线。
+
+## 已上线站点更新静态页面
+
+已开通 HTTPS 的服务器使用 `deploy/update-static.py`：从确认的 Git 提交打包 `dist/`，执行 `sudo python3 deploy/update-static.py /tmp/zhecheng-web.tar.gz`。它只创建本站的独立版本目录并原子切换 `current` 软链接，不修改 Nginx 或证书配置，不重启或 reload 服务。旧版本完整保留；检查记录和旧版本路径保存在 `/var/backups/zhecheng-static-*/`。
+
+切换后通过本机 HTTPS 逐一核对完整页面和所有静态文件，并对比已知其他域名状态、IPv4/IPv6 默认站点内容及 `/etc/nginx` 配置指纹。验收异常自动切回旧版本。检查不等于其他项目的完整业务验收；公网和手机端仍须在用户执行后复核。更新页面不要再次运行首次安装或 HTTPS 开通脚本。
 
 ## 通过 Git 部署首版
 

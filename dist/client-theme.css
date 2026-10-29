@@ -1,0 +1,168 @@
+/* Client revision: original supplied logo and artwork, with the catalog kept in the first view. */
+:root {
+  --blue: #174f91;
+  --blue-dark: #123e73;
+  --ink: #193855;
+  --muted: #536b83;
+  --line: #c5d9e9;
+  --bg: #d9eaf7;
+  --pale: #e7f2fc;
+}
+body { isolation: isolate; }
+.page-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* A light CSS treatment follows the supplied poster without downloading it on phones. */
+  background:
+    radial-gradient(ellipse at 8% 12%, #f5faff9e, transparent 58%),
+    linear-gradient(125deg, #dce8f6 0%, #b4d2f2 44%, #c2d2f0 77%, #dce9f5 100%);
+}
+.site-header {
+  background: #ffffffec;
+  border-color: #c7dcebb3;
+}
+.brand { gap: 12px; color: #184d83; }
+.brand-logo { width: 48px; height: 47px; object-fit: contain; flex-shrink: 0; }
+.brand small { font-size: 11px; letter-spacing: 1px; color: #4f6b85; }
+.brand small span { color: #335b7d; }
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 400px;
+  gap: 40px;
+  align-items: center;
+  min-height: 235px;
+  padding: 30px 0;
+}
+.intro-text { min-width: 0; }
+h1 { color: #153c64; }
+.intro-label { color: #2b5b86; }
+.intro-copy { max-width: 545px; color: #42617c; font-size: 14px; line-height: 1.95; }
+.intro-copy span { display: block; }
+.campus-art {
+  width: 100%;
+  aspect-ratio: 3 / 1;
+}
+.campus-lockup { display: block; width: 100%; height: 100%; object-fit: contain; }
+.note-logo { display: block; width: 44px; height: 44px; object-fit: contain; }
+.catalog-layout { row-gap: 0; }
+.search-row { grid-column: 2; grid-row: 1; }
+.sidebar { grid-column: 1; grid-row: 1 / span 2; }
+.catalog-main { grid-column: 2; grid-row: 2; }
+.result-label { margin-right: 10px; }
+.detail-toolbar { display: flex; justify-content: space-between; align-items: center; min-height: 56px; padding: 4px 12px 4px 22px; background: #ffffffed; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 3; font-size: 13px; color: var(--muted); backdrop-filter: blur(12px); }
+.detail-toolbar .dialog-close { position: static; width: 44px; height: 44px; flex-shrink: 0; }
+.category-heading { color: #3c5d7b; }
+.category { color: #365874; }
+.category span { color: #536b83; }
+.category[aria-pressed="true"] { background: #1d5796; box-shadow: 0 4px 10px #194f9117; }
+.category:hover:not([aria-pressed="true"]) { background: #ffffffa6; }
+.sidebar-note { color: #4c6d8b; border-color: #9cbddd91; }
+.search-box, .saved-filter { border-color: #bed5e8; background: #fffffff2; }
+.results-toolbar p, .view-options select { color: #425f7a; }
+.view-toggle { border-color: #aac6de; }
+.view-toggle button { color: #547593; }
+.view-toggle button[aria-pressed="true"] { background: #ffffffb8; }
+.product { border-color: #d4e2ef; box-shadow: 0 3px 12px #305c8c07; }
+.product:hover { border-color: #7faacf; }
+.product-image { background: #f0f5fa; }
+.product-meta, .product-category { color: #5e7389; }
+.detail-hint { color: #54718e; }
+footer { border-color: #a4c4df91; color: #496782; }
+
+@media (max-width: 1200px) {
+  .intro { grid-template-columns: minmax(0, 1fr) 330px; gap: 30px; }
+  .intro-copy { font-size: 13px; }
+}
+@media (max-width: 900px) {
+  .catalog-layout { display: flex; flex-direction: column; gap: 0; }
+  .search-row, .sidebar, .catalog-main { width: 100%; }
+  .intro { grid-template-columns: minmax(0, 1fr) 285px; min-height: 225px; gap: 20px; }
+  h1 { font-size: 33px; }
+  .category { background: #ffffffdb; border-color: #bad2e7; }
+  .category:hover:not([aria-pressed="true"]) { background: #fff; }
+}
+@media (max-width: 600px) {
+  html { scroll-padding-top: 122px; }
+  .site-header { min-height: 72px; height: auto; padding: calc(12px + env(safe-area-inset-top, 0px)) 16px 12px; gap: 10px; }
+  .brand { font-size: 19px; gap: 9px; letter-spacing: 1px; }
+  .brand-logo { width: 42px; height: 42px; }
+  .brand small { font-size: 10px; letter-spacing: 0; margin-top: 5px; white-space: nowrap; }
+  .saved-top { font-size: 12px; gap: 5px; padding: 0; flex-shrink: 0; min-height: 44px; }
+  .page { padding: 0 16px; }
+  .intro { grid-template-columns: minmax(0, 1fr) 136px; gap: 8px; min-height: 148px; padding: 16px 0 17px; }
+  h1 { font-size: 26px; line-height: 1.35; white-space: nowrap; }
+  .intro-label { display: none; }
+  .intro-copy { font-size: 12px; line-height: 1.8; margin-top: 8px; }
+  .campus-art { align-self: center; height: auto; }
+  .campus-lockup { width: 100%; height: auto; margin: 0; }
+  .search-row { position: sticky; top: 0; z-index: 5; padding: 8px 0; gap: 8px; background: #e5effaf5; box-shadow: 16px 0 0 #e5effaf5, -16px 0 0 #e5effaf5; }
+  .search-box { height: 46px; padding: 0 12px; border-radius: 10px; }
+  .search-box input { font-size: 16px; line-height: 1.4; }
+  .search-box svg { width: 18px; height: 18px; }
+  .saved-filter { height: 46px; min-width: 76px; padding: 0 12px; font-size: 12px; border-radius: 10px; }
+  .sidebar { position: sticky; top: 62px; z-index: 4; padding: 2px 0 8px; background: #e5effaf5; box-shadow: 16px 0 0 #e5effaf5, -16px 0 0 #e5effaf5; }
+  .categories { margin: 0 -16px; padding: 0 16px; gap: 8px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .categories::-webkit-scrollbar { display: none; }
+  .category { font-size: 13px; min-height: 44px; padding: 8px 13px; gap: 7px; border-radius: 8px; }
+  .category span { font-size: 11px; }
+  .category[aria-pressed="true"] { box-shadow: none; }
+  .results-toolbar { min-height: 54px; gap: 4px; }
+  .results-toolbar p { font-size: 12px; white-space: nowrap; }
+  .results-toolbar p b { font-size: 16px; }
+  .result-label { display: none; }
+  .view-options { gap: 6px; }
+  .view-options select { font-size: 12px; max-width: 108px; min-height: 44px; }
+  .view-toggle { gap: 2px; padding: 0; border: 0; }
+  .view-toggle button { min-width: 44px; min-height: 44px; }
+  .view-toggle svg { width: 18px; height: 18px; }
+  .products { gap: 14px 12px; }
+  .product { border-radius: 12px; }
+  .product-image { margin: 6px; aspect-ratio: 1.08; }
+  .product-body { padding: 8px 12px 14px; }
+  .product-category { font-size: 11px; margin-bottom: 5px; }
+  .product h2 { font-size: 15px; line-height: 1.5; min-height: 45px; margin-bottom: 7px; }
+  .product-meta { font-size: 12px; margin-bottom: 12px; }
+  .price { font-size: 22px; }
+  .price-unit { font-size: 11px; }
+  .favorite { width: 44px; height: 44px; top: 8px; right: 8px; }
+  .favorite:after { inset: 0; }
+  .favorite svg { width: 18px; height: 18px; }
+  .image-count { font-size: 10px; line-height: 20px; }
+  .detail-hint svg { width: 16px; height: 16px; }
+  .list .product-image { width: 110px; }
+  .list .product-body { padding: 14px 49px 14px 8px; min-width: 0; }
+  .list .product h2 { font-size: 15px; min-height: 0; }
+  .list .product-meta { max-width: 100%; }
+  .list .favorite { right: 7px; top: 8px; }
+  dialog { width: 100%; max-width: 600px; max-height: 92dvh; margin: auto auto 0; border-radius: 20px 20px 0 0; }
+  .detail-toolbar { min-height: 56px; padding-left: 20px; }
+  .gallery { padding: 18px 20px; }
+  .main-photo { height: 240px; }
+  .detail-info { padding: 20px 20px calc(22px + env(safe-area-inset-bottom, 0px)); }
+  .detail-info h2 { font-size: 24px; }
+  .detail-kicker, .full-name, .source-price { font-size: 12px; }
+  .specifications { font-size: 14px; line-height: 1.7; }
+  .specifications > div { grid-template-columns: 78px minmax(0, 1fr); }
+  .detail-save { min-height: 48px; font-size: 15px; }
+  footer { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .page-backdrop {
+    background: radial-gradient(ellipse at 0 0, #f1faffab, transparent 65%), linear-gradient(150deg, #d8eafa, #b2d1f2 55%, #d2def4);
+  }
+}
+@media (max-width: 360px) {
+  .site-header { padding-left: 14px; padding-right: 14px; }
+  .brand { font-size: 17px; }
+  .brand-logo { width: 36px; height: 36px; }
+  .brand small { font-size: 9px; }
+  .saved-top { font-size: 11px; gap: 4px; }
+  .intro { grid-template-columns: minmax(0, 1fr) 114px; }
+  .intro-copy { font-size: 11px; }
+  h1 { font-size: 23px; }
+  .view-options { gap: 3px; }
+  .view-options select { font-size: 11px; max-width: 91px; }
+  .results-toolbar p { font-size: 11px; }
+  .product-body { padding-left: 10px; padding-right: 10px; }
+  .product h2 { font-size: 14px; min-height: 42px; }
+}
