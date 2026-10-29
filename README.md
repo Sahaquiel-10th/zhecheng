@@ -26,6 +26,8 @@
 
 服务器操作由用户执行。目标为独立目录 `/var/www/zhecheng.aiarrival.cn/`，采用 `releases/<version>/` 及 `current` 软链接管理版本；独立 Nginx 虚拟主机、独立日志，不修改其他站点或全局配置。先用只读检查核对 include 路径、域名冲突、证书工具，再提供安装命令。每次加载前运行 `nginx -t`，通过后使用平滑 reload。Nginx 仍为共享基础服务，不能声称完全物理隔离。
 
+站点配置写入 `/etc/nginx/sites-enabled/zz-zhecheng.aiarrival.cn.conf`，在现有站点之后加载，避免新配置因先被加载而改变隐式默认站点。加载前后除检查已知域名状态，还会比较 IPv4/IPv6 默认站点的完整响应；默认站点内容发生变化会撤回新站配置。
+
 HTTPS 证书尚未配置，DNS 与公网可达性尚未确认。不得将本地预览或配置草稿视为已部署。
 
 ## 通过 Git 部署首版
@@ -41,6 +43,10 @@ git archive --format=tar.gz --output=/tmp/zhecheng-web.tar.gz COMMIT_SHA:dist
 sudo bash deploy/install-zhecheng.sh /tmp/zhecheng-web.tar.gz
 ```
 
-`install-zhecheng.sh` 只用于首次安装：目标目录或配置已存在时停止。它先备份 `/etc/nginx`，检查域名冲突，创建该域名自己的静态文件目录及配置，检查语法，再平滑加载；随后逐字节核对新站返回的 HTML，并打印已知其他项目的加载前后 HTTP 状态。加载或新站验证失败时撤下本次新增配置。现有项目的状态对比属于辅助检查，不能代替完整业务验收。
+`install-zhecheng.sh` 默认用于首次安装：目标目录或配置已存在时停止。它先备份 `/etc/nginx`，检查域名冲突，创建该域名自己的静态文件目录及配置，检查语法，再平滑加载。验收请求通过 `--noproxy '*'` 直连本机，最多尝试 12 次，以等待平滑加载完成；必须同时匹配新站专属响应头及完整 HTML，其他站点的 HTTP 200 不会通过。已知其他项目加载前后 HTTP 状态变化也会触发撤下新站配置。加载或新站验证失败时撤下本次新增配置，并保留诊断响应文件。现有项目的状态对比属于辅助检查，不能代替完整业务验收。
+
+对于首次安装已回退、仅保留项目文件的情形，可显式使用 `sudo bash deploy/install-zhecheng.sh /tmp/zhecheng-web.tar.gz --resume-after-rollback`。只有同域名配置不存在、没有其他 Nginx 配置引用该目录、`current` 指向本项目版本目录，且保留的所有发布文件与指定 Git 包逐字节一致时才允许恢复；不重写保留的发布文件或软链接。
+
+部署验收回归检查：`python3 -m unittest discover -s tests -v`，使用本机隔离的临时 HTTP 服务模拟平滑加载及其他站点响应，不访问生产服务器。
 
 首版脚本只开通 HTTP。HTTPS 使用 `certbot certonly --webroot` 为新域名单独签发，核验 DNS 和 HTTP 公网可达性后，再单独配置本项目的 443 虚拟主机。
