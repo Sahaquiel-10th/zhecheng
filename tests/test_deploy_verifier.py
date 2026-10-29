@@ -2,7 +2,7 @@
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from tempfile import TemporaryDirectory
-import os, subprocess, threading, unittest
+import os, ssl, subprocess, threading, unittest
 
 VERIFIER = Path(__file__).resolve().parents[1] / 'deploy/verify-http.sh'
 EXPECTED = b'<!doctype html><title>catalog</title>'
@@ -45,5 +45,43 @@ class VerifyHTTPTest(unittest.TestCase):
         result, calls = self.run_case(0, wrong_body=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual(len(calls), 4)
+
+    def test_untrusted_https_certificate_is_rejected(self):
+        class Handler(BaseHTTPRequestHandler):
+            def do_GET(self):
+                self.send_response(200)
+                self.send_header('X-Zhecheng-Site', 'catalog')
+                self.end_headers()
+                self.wfile.write(EXPECTED)
+            def log_message(self, *args): pass
+        with TemporaryDirectory() as d:
+            root=Path(d)
+            key,cert=root/'key.pem',root/'cert.pem'
+            subprocess.run(['openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','1','-subj','/CN=zhecheng.aiarrival.cn','-keyout',str(key),'-out',str(cert)],check=True,capture_output=True)
+            context=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            context.load_cert_chain(cert,key)
+            server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
+            server.socket=context.wrap_socket(server.socket,server_side=True)
+            threading.Thread(target=server.serve_forever,daemon=True).start()
+            try:
+                expected=root/'expected.html'
+                expected.write_bytes(EXPECTED)
+                result=subprocess.run(['bash',str(VERIFIER),str(expected),d,'zhecheng.aiarrival.cn',str(server.server_port),'1','0','https'],capture_output=True,text=True,timeout=10)
+                self.assertNotEqual(result.returncode,0)
+                self.assertIn('certificate',result.stderr.lower())
+            finally:
+                server.shutdown()
+                server.server_close()
+
+    def test_renewal_hook_ignores_other_certificates(self):
+        hook=VERIFIER.parent/'renew-nginx.sh'
+        for values in [{},{'RENEWED_LINEAGE':'/etc/letsencrypt/live/theone.aiarrival.cn','RENEWED_DOMAINS':'theone.aiarrival.cn'},{'RENEWED_LINEAGE':'/etc/letsencrypt/live/zhecheng.aiarrival.cn','RENEWED_DOMAINS':'theone.aiarrival.cn'}]:
+            env=dict(os.environ)
+            env.pop('RENEWED_LINEAGE',None)
+            env.pop('RENEWED_DOMAINS',None)
+            env.update(values)
+            result=subprocess.run(['sh',str(hook)],env=env,capture_output=True,text=True)
+            self.assertEqual(result.returncode,0,result.stderr)
+            self.assertEqual(result.stdout,'')
 
 if __name__ == '__main__': unittest.main()

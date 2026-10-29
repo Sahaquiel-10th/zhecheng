@@ -1,0 +1,8 @@
+[Unit]
+Description=Renew only zhecheng.aiarrival.cn certificate
+Wants=network-online.target
+After=network-online.target nginx.service
+
+[Service]
+Type=oneshot
+ExecStart=/snap/bin/certbot renew --cert-name zhecheng.aiarrival.cn --quiet --no-directory-hooks

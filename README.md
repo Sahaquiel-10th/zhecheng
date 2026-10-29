@@ -50,3 +50,13 @@ sudo bash deploy/install-zhecheng.sh /tmp/zhecheng-web.tar.gz
 部署验收回归检查：`python3 -m unittest discover -s tests -v`，使用本机隔离的临时 HTTP 服务模拟平滑加载及其他站点响应，不访问生产服务器。
 
 首版脚本只开通 HTTP。HTTPS 使用 `certbot certonly --webroot` 为新域名单独签发，核验 DNS 和 HTTP 公网可达性后，再单独配置本项目的 443 虚拟主机。
+
+## HTTPS 与自动续期
+
+在已经通过 HTTP 验收的服务器执行 `sudo bash deploy/enable-https.sh`。它先核对站点配置与模板、备份 Nginx、验证公网 ACME 路径，再通过现有 Certbot 账户仅申请 `zhecheng.aiarrival.cn` 的 webroot 证书。账户缺失或需要选择时非交互命令会停止，不会擅自创建新账户。仅替换本项目的站点配置，开通 TLS 1.2/1.3 与 HTTP→HTTPS 跳转；仍然保留 HTTP 的 ACME challenge 路径。切换后校验证书信任、完整 HTML、其他项目状态和默认站点响应，未通过则恢复本项目之前的配置。
+
+续期 hook 位于 `/usr/local/libexec/zhecheng/renew-nginx.sh`，保存为本证书的独立 deploy hook，仅匹配本证书及域名时才检查配置并平滑加载 Nginx。不会放入全局 hook 目录。通过仅针对本域名的 `renew --dry-run --run-deploy-hooks` 验证续期及加载，并要求加载成功标记存在，避免仅凭 Certbot 的退出码误报 hook 成功。
+
+优先复用当前已启用且运行中的 `snap.certbot.renew.timer` 或 `certbot.timer`。没有这类定时器时，仅新增 `zhecheng-cert-renew.service/.timer`，每日两次（北京时间，附随机延迟）检查本域名证书，保留其他证书和调度配置。脚本不会强制续期。若续期演练失败，已通过验收的 HTTPS 保持可用，脚本明确报告未完成的续期环节。
+
+签发和演练遵循 [Certbot 官方文档](https://eff-certbot.readthedocs.io/en/stable/using.html#renewing-certificates)。
