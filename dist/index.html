@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#214e91">
+  <meta name="description" content="浏览城院文创产品清单，查看产品图片、规格、材质工艺与价格。">
+  <title>城院文创清单 · 浙城有礼</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="products.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#catalog">跳到产品清单</a>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="浙城有礼，返回全部产品"><span class="brand-mark" aria-hidden="true">城</span><span>浙城有礼<small>城院文创 · 好物共赏</small></span></a>
+    <nav aria-label="主导航"><a class="nav-active" href="#catalog">产品清单</a><a href="#about">关于展示</a></nav>
+    <button class="saved-top" id="saved-top" aria-pressed="false"><span data-icon="heart"></span><span>我的收藏</span><b id="saved-count">0</b></button>
+  </header>
+  <main class="page">
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="intro-label">一份可以带走的城院记忆</p><h1 id="page-title">城院文创清单<span class="title-dot">。</span></h1><p class="intro-copy">从一盏茶、一页书，到随身的小物。<br class="mobile-break">在这里，找到属于你的城院好物。</p></div>
+      <div class="intro-art" aria-hidden="true"><span>把城院<br>带进日常</span><svg viewBox="0 0 260 110" fill="none"><path d="M0 98H260M14 97V55H43V35H51V55H70V97M83 97V26H92V16H101V26H139V97M108 26V97M148 97V55H163V44H205V55H233V97M163 55V97M205 55V97M176 44V32H192V44M20 68H35M20 79H35M20 89H35M119 39H130M119 52H130M119 65H130M119 78H130M173 64H195M173 76H195M173 88H195M214 65H225M214 77H225M214 89H225" stroke="currentColor" stroke-width="1.5"/></svg></div>
+    </section>
+    <section class="catalog-layout" id="catalog" aria-label="文创产品目录">
+      <aside class="sidebar"><div class="category-heading">逛逛分类<span data-icon="layers"></span></div><div id="categories" class="categories" role="group" aria-label="产品分类"></div><div class="sidebar-note"><span class="note-seal">礼</span><p>有城院的地方<br>就有值得珍藏的日常</p></div></aside>
+      <div class="catalog-main">
+        <div class="search-row"><div class="search-box"><span data-icon="search"></span><label class="sr-only" for="search">搜索产品名称、材质或条码</label><input id="search" type="search" placeholder="搜一搜，找到心仪好物" autocomplete="off"><span class="search-hint">名称 / 材质 / 条码</span></div><button id="saved-filter" class="saved-filter" aria-pressed="false"><span data-icon="heart"></span>只看收藏</button></div>
+        <div class="results-toolbar"><p id="result-count" role="status" aria-live="polite"></p><div class="view-options"><label class="sr-only" for="sort">产品排序</label><select id="sort"><option value="original">清单顺序</option><option value="price-up">价格从低到高</option><option value="price-down">价格从高到低</option></select><div class="view-toggle" role="group" aria-label="显示方式"><button id="grid-view" aria-label="图卡显示" aria-pressed="true"><span data-icon="grid"></span></button><button id="list-view" aria-label="列表显示" aria-pressed="false"><span data-icon="list"></span></button></div></div></div>
+        <div id="products" class="products"></div>
+        <div id="empty" class="empty" hidden><span data-icon="search"></span><h2>还没有找到相关好物</h2><p>换个关键词，或清除筛选后再看看。</p><button id="reset" class="primary">查看全部产品</button></div>
+      </div>
+    </section>
+    <footer id="about"><div><strong>浙城有礼</strong><p>以文创为媒，收藏城院日常。</p></div><p>产品资料来自《城院文创清单》<br>图片、规格与价格均按清单展示</p><a href="#page-title">回到顶部 <span aria-hidden="true">↑</span></a></footer>
+  </main>
+  <dialog id="detail" aria-labelledby="detail-title"><button class="dialog-close" id="close-detail" aria-label="关闭产品详情"><span data-icon="close"></span></button><div id="detail-content"></div></dialog>
+  <noscript><p class="noscript">请开启浏览器 JavaScript 以查看产品清单。</p></noscript>
+</body>
+</html>
