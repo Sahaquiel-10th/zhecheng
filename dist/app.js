@@ -31,13 +31,13 @@ function render() {
   const tokens = state.query.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
   let visible = products.filter(p => (state.category==='全部好物'||p.category===state.category) && (!state.savedOnly||saved.has(p.id)) && tokens.every(token => [p.name,p.brand,p.spec,p.material,p.category,...p.barcodes].join(' ').toLocaleLowerCase().includes(token)));
   if (state.sort!=='original') visible.sort((a,b)=>(a.priceValue-b.priceValue)*(state.sort==='price-up'?1:-1)||a.id-b.id);
-  $('result-count').innerHTML = `<span class="result-label">${escapeHtml(state.savedOnly?'我的收藏':state.category)}</span><span class="result-total">共 <b>${visible.length}</b> 件好物</span>`;
+  $('result-count').innerHTML = `<span class="result-label${state.savedOnly?' filter-active':''}">${escapeHtml(state.savedOnly?'我的收藏':state.category)}</span><span class="result-total">共 <b>${visible.length}</b> 件好物</span>`;
   $('products').classList.toggle('list',state.view==='list');
   $('products').innerHTML = visible.map((p,i) => `<article class="product"><a class="product-link" href="#product-${p.id}" aria-label="查看${escapeHtml(p.name)}详情"><div class="product-image"><img src="${p.images[0].thumb}" alt="${escapeHtml(p.name)}" width="640" height="640" loading="${i<4?'eager':'lazy'}" decoding="async">${p.images.length>1?`<span class="image-count">${p.images.length} 张图片</span>`:''}</div><div class="product-body"><p class="product-category">${p.category}</p><h2>${escapeHtml(p.shortName)}</h2><p class="product-meta">${escapeHtml(p.material)} / ${escapeHtml(p.spec)}</p><div class="product-bottom">${priceHtml(p)}<span class="detail-hint">查看详情 ${icon('arrow')}</span></div></div></a><button class="favorite" data-save="${p.id}" aria-label="${saved.has(p.id)?'取消收藏':'收藏'}${escapeHtml(p.shortName)}" aria-pressed="${saved.has(p.id)}">${icon('heart')}</button></article>`).join('');
   $('empty').hidden = visible.length>0;
   $('saved-count').textContent = saved.size;
   $('saved-top').setAttribute('aria-pressed',state.savedOnly);
-  $('saved-filter').setAttribute('aria-pressed',state.savedOnly);
+  $('saved-top').setAttribute('aria-label', `${state.savedOnly?'返回全部好物':'只看我的收藏'}，已收藏 ${saved.size} 件`);
   $('grid-view').setAttribute('aria-pressed',state.view==='grid');
   $('list-view').setAttribute('aria-pressed',state.view==='list');
 }
@@ -87,10 +87,20 @@ $('sort').value=state.sort;
 $('sort').addEventListener('change',e=>{state.sort=e.target.value;render();syncUrl();});
 $('products').addEventListener('click',e=>{const btn=e.target.closest('[data-save]');if(btn)toggleSaved(Number(btn.dataset.save));});
 function toggleSavedOnly(){state.savedOnly=!state.savedOnly;render();syncUrl();}
-$('saved-filter').addEventListener('click',toggleSavedOnly);
+function closeDisplaySettings(returnFocus=false) {
+  $('display-settings').classList.remove('is-open');
+  $('display-settings-toggle').setAttribute('aria-expanded','false');
+  if (returnFocus) $('display-settings-toggle').focus({preventScroll:true});
+}
+$('display-settings-toggle').addEventListener('click',()=>{
+  const opened=$('display-settings').classList.toggle('is-open');
+  $('display-settings-toggle').setAttribute('aria-expanded',opened);
+});
+document.addEventListener('click',e=>{if(!e.target.closest('#display-settings'))closeDisplaySettings();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('display-settings').classList.contains('is-open')){e.preventDefault();closeDisplaySettings(true);}});
 $('saved-top').addEventListener('click',()=>{toggleSavedOnly();$('catalog').scrollIntoView({block:'start'});});
-$('grid-view').addEventListener('click',()=>{state.view='grid';render();});
-$('list-view').addEventListener('click',()=>{state.view='list';render();});
+$('grid-view').addEventListener('click',()=>{state.view='grid';render();closeDisplaySettings(true);});
+$('list-view').addEventListener('click',()=>{state.view='list';render();closeDisplaySettings(true);});
 $('reset').addEventListener('click',()=>{state.category='全部好物';state.query='';state.savedOnly=false;state.sort='original';$('search').value='';$('sort').value='original';render();syncUrl();$('search').focus();});
 $('close-detail').addEventListener('click',()=>closeDetail());
 $('detail').addEventListener('cancel',e=>{e.preventDefault();closeDetail();});

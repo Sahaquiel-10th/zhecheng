@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#b9ddf3">
+  <meta name="theme-color" content="#f7f9fc">
   <meta name="description" content="浏览城院文创产品清单，查看产品图片、规格、材质工艺与价格。">
   <title>城院文创清单 · 浙城有礼</title>
   <link rel="icon" href="assets/zhecheng-logo.png" type="image/png">
@@ -22,14 +22,14 @@
   </header>
   <main class="page">
     <section class="intro" aria-labelledby="page-title">
-      <div class="intro-text"><p class="intro-label">一份可以带走的城院记忆</p><h1 id="page-title">城院文创清单<span class="title-dot">。</span></h1><p class="intro-copy"><span>一方器物，一纸流年，</span><span>从校园的剪影，到记忆的光阴，</span><span>在这里，邂逅你的城院好物……</span></p></div>
+      <div class="intro-text"><p class="intro-label">一份可以带走的城院记忆</p><h1 id="page-title">城院文创清单<span class="title-dot">。</span></h1><p class="intro-copy" id="intro-copy"><span>一方器物，一纸流年，</span><span>从校园的剪影，到记忆的光阴，</span><span>在这里，邂逅你的城院好物……</span></p></div>
       <div class="campus-art"><img class="campus-lockup" src="assets/campus-cutout-v3.png" width="2172" height="724" alt="浙大城市学院校徽、校名与校园建筑线稿"></div>
     </section>
     <section class="catalog-layout" id="catalog" aria-label="文创产品目录">
-      <div class="search-row"><div class="search-box"><span data-icon="search"></span><label class="sr-only" for="search">搜索产品名称、材质或条码</label><input id="search" type="search" placeholder="搜索城院好物" autocomplete="off"><span class="search-hint">名称 / 材质 / 条码</span></div><button id="saved-filter" class="saved-filter" aria-pressed="false"><span data-icon="heart"></span>只看收藏</button></div>
+      <div class="search-row"><div class="search-box"><span data-icon="search"></span><label class="sr-only" for="search">搜索产品名称、材质或条码</label><input id="search" type="search" placeholder="搜索城院好物" autocomplete="off"><span class="search-hint">名称 / 材质 / 条码</span></div></div>
       <aside class="sidebar"><div class="category-heading">逛逛分类<span data-icon="layers"></span></div><div id="categories" class="categories" role="group" aria-label="产品分类"></div><div class="sidebar-note"><img class="note-logo" src="assets/zhecheng-logo.png" width="1348" height="1307" alt="浙城有礼"><p>有城院的地方<br>就有值得珍藏的日常</p></div></aside>
       <div class="catalog-main">
-        <div class="results-toolbar"><p id="result-count" role="status" aria-live="polite"></p><div class="view-options"><label class="sr-only" for="sort">产品排序</label><select id="sort"><option value="original">清单顺序</option><option value="price-up">价格从低到高</option><option value="price-down">价格从高到低</option></select><div class="view-toggle" role="group" aria-label="显示方式"><button id="grid-view" aria-label="图卡显示" aria-pressed="true"><span data-icon="grid"></span></button><button id="list-view" aria-label="列表显示" aria-pressed="false"><span data-icon="list"></span></button></div></div></div>
+        <div class="results-toolbar"><p id="result-count" role="status" aria-live="polite"></p><div class="display-settings" id="display-settings"><button class="display-settings-toggle" id="display-settings-toggle" aria-expanded="false" aria-controls="display-options">排序 / 显示 <span data-icon="arrow"></span></button><div class="view-options" id="display-options"><label class="sr-only" for="sort">产品排序</label><select id="sort"><option value="original">清单顺序</option><option value="price-up">价格从低到高</option><option value="price-down">价格从高到低</option></select><div class="view-toggle" role="group" aria-label="显示方式"><button id="grid-view" aria-label="图卡显示" aria-pressed="true"><span data-icon="grid"></span></button><button id="list-view" aria-label="列表显示" aria-pressed="false"><span data-icon="list"></span></button></div></div></div></div>
         <div id="products" class="products"></div>
         <div id="empty" class="empty" hidden><span data-icon="search"></span><h2>还没有找到相关好物</h2><p>换个关键词，或清除筛选后再看看。</p><button id="reset" class="primary">查看全部产品</button></div>
       </div>
