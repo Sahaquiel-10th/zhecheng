@@ -13,14 +13,23 @@ body { isolation: isolate; }
   position: fixed;
   inset: 0;
   z-index: -1;
+  overflow: hidden;
   pointer-events: none;
-  /* A light CSS treatment follows the supplied poster without downloading it on phones. */
-  background:
-    radial-gradient(ellipse at 8% 12%, #f5faff9e, transparent 58%),
-    linear-gradient(125deg, #dce8f6 0%, #b4d2f2 44%, #c2d2f0 77%, #dce9f5 100%);
+  background: #76b9e8;
+}
+.page-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* The client's actual blue texture, cropped in CSS to exclude the poster marks. */
+  background-image: linear-gradient(#ffffff2e, #ffffff2e), url('assets/client-campus-artwork.jpg');
+  background-size: cover;
+  background-position: 50% 38%;
+  transform: scale(1.75);
+  transform-origin: 50% 38%;
 }
 .site-header {
-  background: #ffffffec;
+  background: #ffffffbd;
   border-color: #c7dcebb3;
 }
 .brand { gap: 12px; color: #184d83; }
@@ -147,9 +156,6 @@ footer { border-color: #a4c4df91; color: #496782; }
   .specifications > div { grid-template-columns: 78px minmax(0, 1fr); }
   .detail-save { min-height: 48px; font-size: 15px; }
   footer { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
-  .page-backdrop {
-    background: radial-gradient(ellipse at 0 0, #f1faffab, transparent 65%), linear-gradient(150deg, #d8eafa, #b2d1f2 55%, #d2def4);
-  }
 }
 @media (max-width: 360px) {
   .site-header { padding-left: 14px; padding-right: 14px; }
@@ -172,9 +178,8 @@ footer { border-color: #a4c4df91; color: #496782; }
 .display-settings { position: relative; }
 @media (max-width: 600px) {
   html { scroll-padding-top: 104px; }
-  body { background: #f7f9fc; }
-  .page-backdrop { background: #f7f9fc; }
-  .site-header { min-height: 56px; padding: calc(6px + env(safe-area-inset-top, 0px)) 16px 6px; border-bottom: 0; background: #fff; }
+  body { background: #76b9e8; }
+  .site-header { min-height: 56px; padding: calc(6px + env(safe-area-inset-top, 0px)) 16px 6px; border-bottom: 1px solid #ffffff66; background: #ffffffbd; }
   .brand { font-size: 17px; letter-spacing: .5px; gap: 8px; }
   .brand-logo { width: 35px; height: 35px; }
   .brand small { font-size: 10px; margin-top: 4px; }
@@ -182,25 +187,25 @@ footer { border-color: #a4c4df91; color: #496782; }
   .saved-top svg { width: 18px; height: 18px; }
   .saved-top[aria-pressed="true"] { background: #edf4fc; border-radius: 6px; padding: 0 6px; }
   /* Keep the client's full wording and school artwork visible on phone entry. */
-  .intro { display: grid; grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr); align-items: center; gap: 12px; min-height: 140px; margin: 0 -16px; padding: 14px 16px; background: linear-gradient(110deg, #e9f4fc, #d1e5f8); }
+  .intro { display: grid; grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr); align-items: center; gap: 12px; min-height: 140px; margin: 0 -16px; padding: 14px 16px; background: transparent; }
   h1 { font-size: 22px; line-height: 1.35; }
-  .intro-copy { display: block; font-size: 12px; line-height: 1.65; margin: 6px 0 0; }
+  .intro-copy { display: block; font-size: 12px; line-height: 1.65; margin: 6px 0 0; color: #254d6d; }
   .campus-art { display: block; width: 100%; height: auto; aspect-ratio: 3 / 1; margin: 0; align-self: center; }
   .campus-lockup { display: block; width: 100%; height: auto; }
-  .search-row { height: 56px; padding: 6px 0; background: #f7f9fc; box-shadow: 16px 0 0 #f7f9fc, -16px 0 0 #f7f9fc; }
+  .search-row { height: 56px; padding: 6px 0; background: #d9efff9c; box-shadow: 16px 0 0 #d9efff9c, -16px 0 0 #d9efff9c; backdrop-filter: blur(12px); }
   .search-box { height: 44px; border: 1px solid #e0e7ef; border-radius: 8px; background: #fff; }
-  .sidebar { top: 56px; padding: 0; background: #f7f9fc; box-shadow: 16px 0 0 #f7f9fc, -16px 0 0 #f7f9fc; }
-  .categories { gap: 20px; padding: 0 16px; border-bottom: 1px solid #e4eaf1; }
-  .category { position: relative; min-height: 44px; padding: 0 1px; border: 0; border-radius: 0; font-size: 13px; color: #627487; background: transparent; }
+  .sidebar { top: 56px; padding: 0; background: #d9efff9c; box-shadow: 16px 0 0 #d9efff9c, -16px 0 0 #d9efff9c; backdrop-filter: blur(12px); }
+  .categories { gap: 20px; padding: 0 16px; border-bottom: 1px solid #ffffff70; }
+  .category { position: relative; min-height: 44px; padding: 0 1px; border: 0; border-radius: 0; font-size: 13px; color: #214769; background: transparent; }
   .category span { display: none; }
   .category[aria-pressed="true"], .category:hover:not([aria-pressed="true"]) { background: transparent; }
   .category[aria-pressed="true"] { color: #174f91; font-weight: 650; }
   .category[aria-pressed="true"]::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; border-radius: 3px 3px 0 0; background: #245f9c; }
   .results-toolbar { min-height: 44px; }
-  .results-toolbar p { font-size: 12px; }
+  .results-toolbar p { font-size: 12px; color: #153b61; }
   .results-toolbar p b { font-size: 14px; margin: 0 2px; }
   .result-label.filter-active { display: inline; margin-right: 8px; color: #174f91; }
-  .display-settings-toggle { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0; font-size: 12px; color: #526a82; background: transparent; }
+  .display-settings-toggle { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 0; font-size: 12px; color: #153b61; background: transparent; }
   .display-settings-toggle svg { height: 13px; width: 13px; transform: rotate(90deg); }
   .display-settings.is-open .display-settings-toggle { color: #174f91; }
   .display-settings .view-options { display: none; position: absolute; right: 0; top: calc(100% - 2px); z-index: 7; min-width: 218px; padding: 12px; background: white; border: 1px solid #e0e7ef; border-radius: 10px; box-shadow: 0 8px 28px #1938551a; flex-direction: column; align-items: stretch; gap: 10px; }
@@ -232,7 +237,7 @@ footer { border-color: #a4c4df91; color: #496782; }
   .list .product h2 { font-size: 15px; margin-bottom: 4px; }
   .list .product-meta { margin: 0; }
   .list .favorite { top: 3px; right: 3px; }
-  footer { margin-top: 30px; padding-top: 22px; border-top: 1px solid #e1e8f0; }
+  footer { margin-top: 30px; padding-top: 22px; border-top: 1px solid #ffffff70; }
 }
 @media (max-width: 360px) {
   .intro { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 8px; }
