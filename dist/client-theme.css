@@ -179,7 +179,7 @@ footer { border-color: #a4c4df91; color: #496782; }
 @media (max-width: 600px) {
   html { scroll-padding-top: 104px; }
   body { background: #76b9e8; }
-  .site-header { min-height: 56px; padding: calc(6px + env(safe-area-inset-top, 0px)) 16px 6px; border-bottom: 1px solid #ffffff66; background: #ffffffbd; }
+  .site-header { min-height: 56px; padding: calc(6px + env(safe-area-inset-top, 0px)) 16px 6px; border-bottom: 1px solid #e6f0fa; background: #fbfdff; }
   .brand { font-size: 17px; letter-spacing: .5px; gap: 8px; }
   .brand-logo { width: 35px; height: 35px; }
   .brand small { font-size: 10px; margin-top: 4px; }
@@ -187,7 +187,7 @@ footer { border-color: #a4c4df91; color: #496782; }
   .saved-top svg { width: 18px; height: 18px; }
   .saved-top[aria-pressed="true"] { background: #edf4fc; border-radius: 6px; padding: 0 6px; }
   /* Keep the client's full wording and school artwork visible on phone entry. */
-  .intro { display: grid; grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr); align-items: center; gap: 12px; min-height: 140px; margin: 0 -16px; padding: 14px 16px; background: transparent; }
+  .intro { display: grid; grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr); align-items: center; gap: 12px; min-height: 140px; margin: 0 -16px; padding: 14px 16px; background: linear-gradient(112deg, #fcfeff 0%, #f3f9ff 55%, #eaf4fe 100%); }
   h1 { font-size: 22px; line-height: 1.35; }
   .intro-copy { display: block; font-size: 12px; line-height: 1.65; margin: 6px 0 0; color: #254d6d; }
   .campus-art { display: block; width: 100%; height: auto; aspect-ratio: 3 / 1; margin: 0; align-self: center; }
